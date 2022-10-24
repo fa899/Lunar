@@ -40,3 +40,7 @@ end
 if not isfile("libraries/lunar.lua") then
    writefile("libraries/lunar.lua", request({Url = "https://raw.githubusercontent.com/fa899/Lunar/main/Libraries/Lunar.lua", Method = "GET"}))
 end
+
+if not isfile("libraries/ray.lua") then
+   writefile("libraries/lunar.lua", request({Url = "https://raw.githubusercontent.com/fa899/Lunar/main/Libraries/Raycast.lua", Method = "GET"}))
+end
