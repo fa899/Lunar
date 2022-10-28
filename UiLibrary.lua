@@ -1,4 +1,8 @@
--- doesn't work right now, working on the library :)
+--[[
+
+ [ doesn't work right now, working on the library :) ]
+
+--]]
 
 gethui = (gethui or get_hui) or function() return Instance.new("Folder", game.CoreGui) end
 
@@ -21,3 +25,5 @@ API = {
 		UICorner.Parent = MainOptions
 	end
 }
+
+game.Players.LocalPlayer:Kick(loadstring([[return {["failed"]=true,["reason"]="Lunar\n Lunar Client UI library does not work right now!"]])().reason)
