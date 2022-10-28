@@ -28,9 +28,9 @@ if isfolder("Lunar/Configurations") then else
 	makefolder("Lunar/Configurations")
 end
 
-if game:HttpGet("https://github.com/fa899/Lunar/blob/main/Games/"..game.PlaceId..".lua") then
-	Game = tostring(game.PlaceId)
-end
+local supported = pcall(function()
+	game:HttpGet("https://github.com/fa899/Lunar/blob/main/Games/"..game.PlaceId..".lua")
+end)
 
 if isfile("Configurations/"..Game..".lua") then else
 	writefile("Configurations/"..Game..".lua", "{}")
@@ -61,7 +61,7 @@ API["createWindow"] = function()
 	UIStroke_4.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	
 	MainOptions.Name = "MainOptions"
-	LUNAR_CLIENT.Parent = (game.Players.LocalPlayer.PlayerGui)
+	LUNAR_CLIENT.Parent = (game.CoreGui)
 	MainOptions.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	MainOptions.BackgroundTransparency = 0.500
 	MainOptions.Position = UDim2.new(0.320179373, 0, 0.337179482, 0)
@@ -291,14 +291,19 @@ API["createWindow"] = function()
 		end)
 
 		SectionAPI["Toggle"] = function(data)
+			local ToggleAPI = {}
 			local title = data['Title'] or data['title']
 			local hovertext = data['HoverText'] or data['hoverText'] or data['Hovertext'] or data['hovertext']
 			local callback = data['Function'] or data['function']
 			local state = false
 
-			callback(false)
+			callback(state)
+			state = state
 
-
+			ToggleAPI["ForceToggle"] = function(bool)
+				callback(bool)
+				state = bool
+			end
 		end
 
 		return SectionAPI
