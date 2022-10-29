@@ -4,37 +4,9 @@
 
 --]]
 
-gethui = (gethui or get_hui) or function() return Instance.new("Folder", game.CoreGui) end
+gethui = (gethui or get_hui or gethiddenui or get_hidden_ui or get_hiddenui or gethidden_ui) or function() return Instance.new("Folder", game.CoreGui) end
 local Game = "Universal"
-
 API = {}
-
-local old = writefile
-function writefile(file, str)
-	return old("Lunar/"..file, str)
-end
-local old = readfile
-function readfile(file)
-	return old("Lunar/"..file) or nil
-end
-local old = isfile
-function isfile(file)
-	return pcall(function() -- true or false (error-only)
-		old("Lunar/"..file)
-	end)
-end
-
-if isfolder("Lunar/Configurations") then else
-	makefolder("Lunar/Configurations")
-end
-
-local supported = pcall(function()
-	game:HttpGet("https://github.com/fa899/Lunar/blob/main/Games/"..game.PlaceId..".lua")
-end)
-
-if isfile("Configurations/"..Game..".lua") then else
-	writefile("Configurations/"..Game..".lua", "{}")
-end
 
 API["createWindow"] = function()
 	local SectionsAPI = {}
@@ -55,13 +27,19 @@ API["createWindow"] = function()
 	local UIStroke_4 = Instance.new("UIStroke")
 	local MAIN = Instance.new("Frame")
 	
+	game:GetService("UserInputService").InputBegan:Connect(function(ip)
+		if ip.KeyCode == Enum.KeyCode.RightShift then
+			LUNAR_CLIENT.Enabled = not (LUNAR_CLIENT.Enabled)
+		end
+	end)
+	
 	UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	UIStroke_2.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	UIStroke_3.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	UIStroke_4.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-	
+
 	MainOptions.Name = "MainOptions"
-	LUNAR_CLIENT.Parent = (game.CoreGui)
+	LUNAR_CLIENT.Parent = (game.StarterGui)
 	MainOptions.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	MainOptions.BackgroundTransparency = 0.500
 	MainOptions.Position = UDim2.new(0.320179373, 0, 0.337179482, 0)
@@ -151,9 +129,9 @@ API["createWindow"] = function()
 	MAIN.BackgroundTransparency = 0.800
 	MAIN.Position = UDim2.new(0.0153846154, 0, 0.173228353, 0)
 	MAIN.Size = UDim2.new(0, 504, 0, 204)
-	
+
 	local MODSSECTION, SETTINGSSECTION, WAYPOINTSSECTION
-	
+
 	task.spawn(function()
 		MODSSECTION = Instance.new("ScrollingFrame")
 		local UIListLayout = Instance.new("UIListLayout")
@@ -167,9 +145,15 @@ API["createWindow"] = function()
 
 		UIListLayout.Parent = MODSSECTION
 		UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-		UIListLayout.Padding = UDim.new(0, 5)
+		UIListLayout.Padding = UDim.new(0, 9)
+		
+		MODSSECTION.ChildAdded:Connect(function(c)
+			if c.ClassName:lower():find("text") or c.ClassName:lower():find("frame") then
+				MODSSECTION.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y)
+			end
+		end)
 	end)
-	
+
 	task.spawn(function()
 		SETTINGSSECTION = Instance.new("ScrollingFrame")
 		local UIListLayout = Instance.new("UIListLayout")
@@ -185,9 +169,9 @@ API["createWindow"] = function()
 
 		UIListLayout.Parent = SETTINGSSECTION
 		UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-		UIListLayout.Padding = UDim.new(0, 5)
+		UIListLayout.Padding = UDim.new(0, 9)
 	end)
-	
+
 	task.spawn(function()
 		WAYPOINTSSECTION = Instance.new("ScrollingFrame")
 		local UIListLayout = Instance.new("UIListLayout")
@@ -203,16 +187,16 @@ API["createWindow"] = function()
 
 		UIListLayout.Parent = WAYPOINTSSECTION
 		UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-		UIListLayout.Padding = UDim.new(0, 5)
+		UIListLayout.Padding = UDim.new(0, 9)
 	end)
-	
+
 	MODSSECTION.Visible = false
 	UIStroke.Color = Color3.fromRGB(189, 189, 189)
 	SETTINGSSECTION.Visible = false
 	UIStroke_2.Color = Color3.fromRGB(189, 189, 189)
 	WAYPOINTSSECTION.Visible = false
 	UIStroke_3.Color = Color3.fromRGB(189, 189, 189)
-	
+
 	local switchTab = function(tab)
 		MODSSECTION.Visible = false
 		UIStroke.Color = Color3.fromRGB(189, 189, 189)
@@ -229,15 +213,15 @@ API["createWindow"] = function()
 			UIStroke_3.Color = Color3.fromRGB(255, 255, 255)
 		end
 	end
-	
+
 	MODS.MouseButton1Click:Connect(function()
 		switchTab("MODS-SECTION")
 	end)
-	
+
 	SETTINGS.MouseButton1Click:Connect(function()
 		switchTab("SETTINGS-SECTION")
 	end)
-	
+
 	WAYPOINTS.MouseButton1Click:Connect(function()
 		switchTab("WAYPOINTS-SECTION")
 	end)
@@ -245,7 +229,7 @@ API["createWindow"] = function()
 	SectionsAPI["Section"] = function(tab, title)
 		local SectionAPI = {}
 		local TAB = MAIN[tab:upper()]
-		
+
 		local Section = Instance.new("Frame")
 		local UIListLayout = Instance.new("UIListLayout")
 
@@ -281,10 +265,10 @@ API["createWindow"] = function()
 		UIListLayout.Parent = Frame
 		UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 		UIListLayout.Padding = UDim.new(0, 5)
-		
+
 		Section.Size = UDim2.new(0, 498, 0, UIListLayout.AbsoluteContentSize.Y)
-		
-		Section.ChildAdded:Connect(function(c)
+
+		Frame.ChildAdded:Connect(function(c)
 			if c.ClassName:lower():find("text") or c.ClassName:lower():find("frame") then
 				Section.Size = UDim2.new(0, 498, 0, UIListLayout.AbsoluteContentSize.Y)
 			end
@@ -296,14 +280,60 @@ API["createWindow"] = function()
 			local hovertext = data['HoverText'] or data['hoverText'] or data['Hovertext'] or data['hovertext']
 			local callback = data['Function'] or data['function']
 			local state = false
+			
+			local Toggle = Instance.new("TextButton")
+			local TogglerIcon = Instance.new("ImageLabel")
+			local ToggleTitle = Instance.new("TextLabel")
+			
+			local customasset = (getsynasset or getkrnlasset or getcustomasset or get_custom_asset or get_customasset or getcustom_asset or getassetfromworkspace)
+			
+			Toggle.Name = "Toggle"
+			Toggle.Parent = Frame
+			Toggle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			Toggle.BackgroundTransparency = 1.000
+			Toggle.Size = UDim2.new(0, 490, 0, 18)
+			Toggle.ZIndex = 2
+			Toggle.Font = Enum.Font.SourceSans
+			Toggle.Text = " "
+			Toggle.TextColor3 = Color3.fromRGB(0, 0, 0)
+			Toggle.TextSize = 1.000
+			Toggle.TextTransparency = 1.000
+
+			TogglerIcon.Name = "TogglerIcon"
+			TogglerIcon.Parent = Toggle
+			TogglerIcon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			TogglerIcon.BackgroundTransparency = 1.000
+			TogglerIcon.Size = UDim2.new(0, 19, 0, 18)
+			TogglerIcon.Image = customasset(state == false and "Lunar/assets/cancel.png" or state == true and "Lunar/assets/check.png")
+
+			ToggleTitle.Name = "ToggleTitle"
+			ToggleTitle.Parent = Toggle
+			ToggleTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			ToggleTitle.BackgroundTransparency = 1.000
+			ToggleTitle.Position = UDim2.new(0.0734693855, 0, 0, 0)
+			ToggleTitle.Size = UDim2.new(0, 454, 0, 18)
+			ToggleTitle.Font = Enum.Font.Gotham
+			ToggleTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+			ToggleTitle.TextSize = 14.000
+			ToggleTitle.TextXAlignment = Enum.TextXAlignment.Left
 
 			callback(state)
 			state = state
+			
+			Toggle.MouseButton1Click:Connect(function()
+				local bool = not state
+				state = bool
+				TogglerIcon.Image = customasset(state == false and "Lunar/assets/cancel.png" or state == true and "Lunar/assets/check.png")
+				callback(bool)
+			end)
 
 			ToggleAPI["ForceToggle"] = function(bool)
-				callback(bool)
 				state = bool
+				TogglerIcon.Image = customasset(state == false and "Lunar/assets/cancel.png" or state == true and "Lunar/assets/check.png")
+				callback(bool)
 			end
+			
+			return ToggleAPI
 		end
 
 		return SectionAPI
@@ -311,17 +341,5 @@ API["createWindow"] = function()
 
 	return SectionsAPI
 end
-
---[[
-local WINDOW = API['createWindow']()
-
-local SECTION = WINDOW['Section']('MODS-SECTION', 'yes')
-
-local TOG = SECTION["Toggle"]({
-	["Title"] = "Professional",
-	["hovertext"] = "Slayerson",
-	["function"] = function(callback) print(callback) end
-})
---]]
 
 return API
