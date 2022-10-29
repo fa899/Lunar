@@ -1,3 +1,5 @@
+-- // UI Library
+getgenv().LunarLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/fa899/Lunar/main/UiLibrary.lua", not (false)))()
 -- // MAIN FILE SYSTEMS
 local old = writefile
 function writefile(file, str)
