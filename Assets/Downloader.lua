@@ -48,3 +48,15 @@ end
 if not isfile("assets/cape.png") then
 	writefile("assets/cape.png", request({Url="https://github.com/fa899/Lunar/blob/main/Assets/LunarCape.png?raw=true", Method = "GET"}).Body)
 end
+
+if not isfile("assets/cape.png") then
+	writefile("assets/cape.png", request({Url="https://github.com/fa899/Lunar/blob/main/Assets/LunarCape.png?raw=true", Method = "GET"}).Body)
+end
+
+if not isfile("assets/cancel.png") then
+	writefile("assets/cancel.png", request({Url="https://github.com/fa899/Lunar/blob/main/Assets/Close.png?raw=true", Method = "GET"}).Body)
+end
+
+if not isfile("assets/check.png") then
+	writefile("assets/check.png", request({Url="https://github.com/fa899/Lunar/blob/main/Assets/Check.png?raw=true", Method = "GET"}).Body)
+end
