@@ -324,14 +324,18 @@ API["createWindow"] = function()
 				local bool = not state
 				state = bool
 				TogglerIcon.Image = customasset(state == false and "Lunar/assets/cancel.png" or state == true and "Lunar/assets/check.png")
+				ToggleAPI["isToggled"] = state
 				callback(bool)
 			end)
 
 			ToggleAPI["ForceToggle"] = function(bool)
 				state = bool
 				TogglerIcon.Image = customasset(state == false and "Lunar/assets/cancel.png" or state == true and "Lunar/assets/check.png")
+				ToggleAPI["isToggled"] = state
 				callback(bool)
 			end
+			
+			ToggleAPI["isToggled"] = state
 			
 			return ToggleAPI
 		end
